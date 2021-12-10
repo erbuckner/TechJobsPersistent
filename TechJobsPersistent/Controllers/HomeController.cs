@@ -36,10 +36,10 @@ namespace TechJobsPersistent.Controllers
 
         public IActionResult ProcessAddJobForm(AddJobViewModel viewModel, string[] selectedSkills)
         {
-            Employer tempEmployer = context.Employers.Find(viewModel.EmployerId);
 
             if (ModelState.IsValid)
             {
+                Employer tempEmployer = context.Employers.Find(viewModel.EmployerId);
                 Job job = new Job { Name = viewModel.Name, Employer = tempEmployer };
 
                 foreach (string skill in selectedSkills)

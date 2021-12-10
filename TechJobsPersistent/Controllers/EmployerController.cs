@@ -60,10 +60,10 @@ namespace TechJobsPersistent.Controllers
                     context.SaveChanges();
                 }
 
-                return Redirect("/Employer/");
+                return Redirect("/Employer");
             }
-
-            return View(viewModel);
+            
+            return View("Add", viewModel);
         }
 
         public IActionResult About(int id)

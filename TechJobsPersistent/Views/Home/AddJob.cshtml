@@ -4,8 +4,8 @@
 
 <form asp-controller="Home" asp-action="ProcessAddJobForm" method="post">
     <div class="form-group">
-        <label asp-for="Name">Job Name</label>
-        <input asp-for="Name" />
+        <label asp-for="Name">Job Title</label>
+        <input asp-for="Name" required />
         <span asp-validation-for="Name"></span>
     </div>
 
