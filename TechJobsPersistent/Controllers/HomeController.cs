@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using TechJobsPersistent.Models;
 using TechJobsPersistent.ViewModels;
 using TechJobsPersistent.Data;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace TechJobsPersistent.Controllers
 {
@@ -32,13 +28,38 @@ namespace TechJobsPersistent.Controllers
         [HttpGet("/Add")]
         public IActionResult AddJob()
         {
-            return View();
+            List<Employer> employers = context.Employers.ToList();
+            List<Skill> skills = context.Skills.ToList();
+            AddJobViewModel viewModel = new AddJobViewModel(employers, skills);
+            return View(viewModel);
         }
 
-        public IActionResult ProcessAddJobForm()
+        public IActionResult ProcessAddJobForm(AddJobViewModel viewModel, string[] selectedSkills)
         {
-            return View();
+            Employer tempEmployer = context.Employers.Find(viewModel.EmployerId);
+
+            if (ModelState.IsValid)
+            {
+                Job job = new Job { Name = viewModel.Name, Employer = tempEmployer };
+
+                foreach (string skill in selectedSkills)
+                {
+                    JobSkill jobSkill = new JobSkill
+                    {
+                        Job = job,
+                        SkillId = Convert.ToInt32(skill)
+                    };
+
+                    context.JobSkills.Add(jobSkill);
+                }
+                context.Jobs.Add(job);
+                context.SaveChanges();
+                return Redirect("/Home/");
+            }
+
+            return View("AddJob", viewModel);
         }
+
 
         public IActionResult Detail(int id)
         {
